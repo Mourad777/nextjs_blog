@@ -4,7 +4,8 @@ import Layout from '../../components/Layout';
 import classes from './posts.module.css'
 import axios from 'axios'
 
-export default function Post() {
+export default function Post({post}) {
+    console.log('post:',post)
     const router = useRouter();
     const postId = router.query.post;
 
@@ -18,33 +19,37 @@ export default function Post() {
     )
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({params}) {
 
+    const postId = params.post;
     const baseURL = 'http://localhost:1338';
-    const posts = await axios.get(`${baseURL}/posts`);
-    console.log('posts', posts)
+    const post = await axios.get(`${baseURL}/api/posts/${postId}`);
 
     return {
         // revalidate:604800,
-        props: {
-            posts: posts.data,
-        }
-    }
+            props: {
+             post:post.data
+            },
+          }
+    
 }
 
 export async function getStaticPaths() {
-
+    
     const baseURL = 'http://localhost:1338';
-    const posts = await axios.get(`${baseURL}/posts`);
-    console.log('posts', posts)
+
+    const posts = await axios.get(`${baseURL}/api/posts`);
+    
+    const params = posts.data.data.map(post=>{
+        return    {
+            params: {
+                post: post.id.toString()
+            },
+        }
+    })
 
     return {
-        paths: [
-            {
-                params: {
-                    post: '1'
-                },
-            }],
+        paths: params,
         fallback: true,
     }
 }

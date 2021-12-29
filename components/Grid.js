@@ -15,9 +15,9 @@ export default function Grid({elements=[]}) {
             {elements.map(post => (
                 <div key={`post[${post.id}]`} className={classes['grid-item']}>
                     <div onClick={() => handleCard(post.id)} className={classes.card}>
-                        <h3 className={classes['card-text']}>A guide to travelling Zipolite</h3>
+                        <h3 className={classes['card-text']}>{post.attributes.title}</h3>
                         <picture>
-                            <img className={classes['card-image']} src={`http://localhost:1338${post.thumbnail.url}`} />
+                            {post.attributes.thumbnail.data ?<img className={classes['card-image']} src={`http://localhost:1338${post.attributes.thumbnail.data.attributes.url}`} /> : <img />}
                         </picture>
                     </div>
                 </div>
